@@ -9,7 +9,6 @@ import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -22,38 +21,37 @@ public class TemplateApplication {
         SpringApplication.run(TemplateApplication.class, args);
     }
 
+
+    // Se debe de crear un bean del RestTemplate para su posterior uso
     @Bean
     public RestTemplate restTemplate(RestTemplateBuilder builder) {
         return builder.build();
     }
 
+
     @Bean
     public CommandLineRunner run(RestTemplate restTemplate, CommentsServices commentsServices) throws Exception {
         return args -> {
 
+            /*Esta es la forma para guardar un  solo objeto obtenido de un json, si el json contiene mas de 1 objeto no debo de usar esto
+           Comment comment = restTemplate.getForObject("https://jsonplaceholder.typicode.com/comments", Comment.class);
 
-            //Esta es la forma para guardar un  solo objeto obtenido de un json, si el json contiene mas de 1 objeto no debo de usar esto
-            //Tengo que ver como consigo guardar los datos en una lista
-          //  Comment comment = restTemplate.getForObject("https://jsonplaceholder.typicode.com/comments", Comment.class);
-
-            //commentsServices.SaveComments(comment);
+            commentsServices.SaveComments(comment);*/
 
 
-            //Esta es la forma con la que pueda guardar una lista, pero falla a la hora de guardar en la base de datos,
-            // debo encontrar forma de como guardar esto en la base de datos sin error
+            //Esta es la forma con la que pueda guardar los multiples datos de varios json obtenido via una url del un api  y finalmente  guardarlos en una lista de objetos
             ResponseEntity<Comment[]> responseEntity = restTemplate.getForEntity("https://jsonplaceholder.typicode.com/comments", Comment[].class);
 
             List<Comment> commentList = Arrays.asList(Objects.requireNonNull(responseEntity.getBody()));
 
-            for (Comment comment: commentList) {
 
-                System.out.println(comment.getName());
+            commentsServices.SaveAllComments(commentList);
 
+
+            for (Comment comment: commentsServices.FindAllComment()) {
+
+                 System.out.println(comment.getBody());
             }
-
-           // commentsServices.SaveAllComments(commentList);
-
         };
     }
-
 }

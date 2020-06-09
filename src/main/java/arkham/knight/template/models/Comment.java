@@ -1,6 +1,7 @@
 package arkham.knight.template.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -15,11 +16,14 @@ public class Comment {
 
     private String name;
     private String email;
+
+    //Esto me permite aumentar el tamaño maximo que soportara la columna de texto ya que es un varchar y de esta forma evito de que
+    //el tipo de dato sea muy grande para la columna, con esto le indicamos a la columna que debe de ser varchar(300) en la base de datos
+    @Column(length = 300)
     private String body;
 
 
-    public Comment() {
-    }
+    public Comment() { }
 
 
     public Long getId() { return id; }
