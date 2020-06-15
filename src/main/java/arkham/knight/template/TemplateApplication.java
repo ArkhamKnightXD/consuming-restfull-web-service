@@ -1,7 +1,7 @@
 package arkham.knight.template;
 
 import arkham.knight.template.models.Comment;
-import arkham.knight.template.services.CommentsServices;
+import arkham.knight.template.services.CommentsService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -9,7 +9,7 @@ import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
-import java.util.ArrayList;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -30,7 +30,7 @@ public class TemplateApplication {
 
 
     @Bean
-    public CommandLineRunner run(RestTemplate restTemplate, CommentsServices commentsServices) throws Exception {
+    public CommandLineRunner run(RestTemplate restTemplate, CommentsService commentsService) throws Exception {
         return args -> {
 
             /*Esta es la forma para guardar un  solo objeto obtenido de un json, si el json contiene mas de 1 objeto no debo de usar esto
@@ -45,10 +45,10 @@ public class TemplateApplication {
             List<Comment> commentList = Arrays.asList(Objects.requireNonNull(responseEntity.getBody()));
 
 
-            commentsServices.SaveAllComments(commentList);
+            commentsService.SaveAllComments(commentList);
 
 
-            for (Comment comment: commentsServices.FindAllComment()) {
+            for (Comment comment: commentsService.FindAllComment()) {
 
                  System.out.println(comment.getBody());
             }
